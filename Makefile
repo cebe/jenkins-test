@@ -8,6 +8,7 @@ help:
 	@echo "make clean	- stop docker and remove container"
 
 test: adjust-config
+	composer install --prefer-dist
 	docker run --rm=true -v $(shell pwd):/opt/test --link $(shell cat redis-dockerid):redis yiitest/php:${PHP_VERSION} phpunit --verbose
 
 adjust-config: docker
