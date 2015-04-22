@@ -1,19 +1,26 @@
 
 REDIS_VERSON=3.0.0
+PHP_VERSON=5.6.8
+
 
 help:
 	@echo "make test	- run phpunit tests using a docker environment"
 	@echo "make clean	- stop docker and remove container"
 
 test: adjust-config
-	phpunit
+	docker run --rm=true -v $(shell pwd):/opt/test yiitest/php:${PHP_VERSION} "phpunit --verbose"
 
 adjust-config: docker
 	echo "<?php \$$config['databases']['redis']['port'] = $(shell docker port $(shell cat redis-dockerid) | grep -Po ":(\d+)" | cut -b 2-);" > tests/data/config.local.php
 
-docker:
-	cd tests/docker/redis && sh build.sh
+docker: build-docker
 	docker run -d -P yiitest/redis:${REDIS_VERSION} > redis-dockerid
+
+build-docker:
+	test -d tests/tools || git clone https://github.com/cebe/jenkins-test-docker tests/tools
+	cd tests/tools && git checkout -- . && git pull
+	cd tests/tools/php && sh build.sh
+	cd tests/tools/redis && sh build.sh
 
 
 clean:
