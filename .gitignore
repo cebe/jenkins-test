@@ -4,3 +4,4 @@
 /tests/CacheTestCase.php
 /tests/BaseTestCase.php
 /tests/data/config.local.php
+/redis-dockerid
