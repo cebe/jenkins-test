@@ -12,7 +12,8 @@ test: adjust-config
 	docker run --rm=true -v $(shell pwd):/opt/test --link $(shell cat redis-dockerid):redis yiitest/php:${PHP_VERSION} phpunit --verbose
 
 adjust-config: docker
-	echo "<?php \$$config['databases']['redis']['port'] = $(shell docker port $(shell cat redis-dockerid) | grep -Po ":(\d+)" | cut -b 2-); \$$config['databases']['redis']['hostname'] = 'redis';" > tests/data/config.local.php
+#	echo "<?php \$$config['databases']['redis']['port'] = $(shell docker port $(shell cat redis-dockerid) | grep -Po ":(\d+)" | cut -b 2-); \$$config['databases']['redis']['hostname'] = 'redis';" > tests/data/config.local.php
+	echo "<?php \$$config['databases']['redis']['port'] = 6379; \$$config['databases']['redis']['hostname'] = 'redis';" > tests/data/config.local.php
 
 docker: build-docker
 	docker run -d -P yiitest/redis:${REDIS_VERSION} > redis-dockerid
