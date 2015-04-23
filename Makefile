@@ -1,6 +1,7 @@
 
 REDIS_VERSON=3.0.0
 PHP_VERSON=5.6.8
+YII_VERSON=dev-master
 
 
 help:
@@ -8,6 +9,7 @@ help:
 	@echo "make clean	- stop docker and remove container"
 
 test: adjust-config
+	composer require "yiisoft/yii2:${YII_VERSION}" --prefer-dist
 	composer install --prefer-dist
 	docker run --rm=true -v $(shell pwd):/opt/test --link $(shell cat redis-dockerid):redis yiitest/php:${PHP_VERSION} phpunit --verbose
 
